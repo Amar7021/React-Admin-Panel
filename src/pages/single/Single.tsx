@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Sidebar from "@/components/sidebar/Sidebar";
 import Navbar from "@/components/navbar/Navbar";
 import Chart from "@/components/chart/Chart";
@@ -8,6 +8,7 @@ import { dbService, User } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Globe, Edit2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Single = () => {
   const { userId, productId } = useParams();
@@ -62,7 +63,7 @@ const Single = () => {
         <main className="flex-1 p-6 space-y-6 overflow-y-auto">
           {/* Top Panel: Card Profile & Charts */}
           <div className="flex flex-col lg:flex-row gap-6">
-            
+
             {/* Left: Detail Profile Info Card */}
             <Card className="flex-1 min-w-[320px] relative overflow-hidden">
               <CardHeader className="flex flex-row justify-between items-center pb-2">
@@ -99,7 +100,7 @@ const Single = () => {
                           </h2>
                           <p className="text-xs text-muted-foreground">@{userRecord.username}</p>
                         </div>
-                        
+
                         <div className="space-y-2 text-sm text-muted-foreground">
                           <div className="flex items-center justify-center sm:justify-start gap-2.5">
                             <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />

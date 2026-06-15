@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Search,
   Globe,
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { dbService, AppNotification } from "@/lib/db";
 import {
   DropdownMenu,
@@ -24,15 +24,23 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown";
 import { cn } from "@/utils/cn";
+import { toast } from "sonner";
+import { Menu } from "lucide-react";
+import { useSidebarStore } from "@/store/sidebarStore";
 
 const Navbar = () => {
-  const navigate = useNavigate();
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [fullscreen, setFullscreen] = useState(false);
+
   const darkMode = useThemeStore((state) => state.darkMode);
   const toggleDarkMode = useThemeStore((state) => state.toggleDarkMode);
   const { currentUser, logout } = useAuthStore();
+  const toggleSidebar = useSidebarStore((state) => state.toggle);
 
-  const [notifications, setNotifications] = useState<AppNotification[]>([]);
-  const [fullscreen, setFullscreen] = useState(false);
+  const navigate = useNavigate();
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  console.log({ currentUser })
 
   useEffect(() => {
     const unsub = dbService.listenNotifications((data) => {
@@ -41,10 +49,52 @@ const Navbar = () => {
     return () => unsub();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if (isTyping) return;
+
+      const isShortcut =
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "k";
+
+      if (isShortcut) {
+        event.preventDefault();
+        searchRef.current?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const handleMarkRead = () => {
     dbService.markNotificationsRead();
+  };
+
+  const handleLinkClick = (path: string): void => {
+    if (!currentUser) {
+      toast.error("You are not logged in", {
+        position: "bottom-right",
+        action: {
+          label: "Login",
+          onClick: () => navigate("/login"),
+        }
+      });
+      return;
+    }
+    navigate(path);
   };
 
   const handleLogout = async () => {
@@ -72,22 +122,37 @@ const Navbar = () => {
   };
 
   return (
-    <header className="h-16 border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-40 flex items-center px-6 justify-between shrink-0">
-      <div className="flex items-center gap-2 bg-muted/60 px-3 py-1.5 rounded-lg border border-border w-80 max-w-full focus-within:ring-2 focus-within:ring-primary/40 focus-within:border-primary transition-all">
-        <input
-          type="text"
-          placeholder="Search items, users, queries..."
-          className="bg-transparent border-0 outline-hidden text-sm w-full placeholder:text-muted-foreground text-foreground"
-        />
+    <header className="h-16 border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-3 sm:px-4 md:px-6 gap-1">
+      <button
+        onClick={toggleSidebar}
+        className="p-2 rounded-lg hover:bg-muted"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+      <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-md flex items-center gap-2 bg-muted/60 px-3 py-1.5 rounded-lg border border-border transition-all focus-within:ring-2 focus-within:ring-primary/40">
         <Search className="h-4 w-4 text-muted-foreground" />
+        <input
+          type="search"
+          placeholder="Search..."
+          className="bg-transparent border-0 outline-hidden text-sm w-full placeholder:text-muted-foreground text-foreground"
+          ref={searchRef}
+        />
+        <div className="hidden md:flex items-center gap-1">
+          <kbd className="border border-border rounded px-1 text-xs font-semibold bg-background">
+            Ctrl
+          </kbd>
+          <span>+</span>
+          <kbd className="border border-border rounded px-1 text-xs font-semibold bg-background">
+            K
+          </kbd>
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors select-none cursor-pointer">
+      <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
+        <div className="hidden md:flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors select-none cursor-pointer">
           <Globe className="h-4 w-4" />
           <span>English</span>
         </div>
-
         <button
           onClick={toggleDarkMode}
           className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors cursor-pointer"
@@ -169,37 +234,40 @@ const Navbar = () => {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-semibold leading-none text-foreground">
-                  {currentUser?.displayName || "Admin User"}
-                </p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {currentUser?.email || "admin@admin.com"}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to="/profile" className="w-full flex items-center gap-2">
-                <UserIcon className="h-4 w-4" />
-                <span>My Profile</span>
-              </Link>
+            {
+              currentUser && <><DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-semibold leading-none text-foreground">
+                    {currentUser?.displayName}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {currentUser?.email}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+              </>
+            }
+            <DropdownMenuItem onClick={() => handleLinkClick('/profile')}>
+              <UserIcon className="h-4 w-4 mr-2" />
+              <span>My Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings" className="w-full flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
-              </Link>
+            <DropdownMenuItem onClick={() => handleLinkClick('/settings')}>
+              <Settings className="h-4 w-4 mr-2" />
+              <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
+            {
+              currentUser && <><DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </>
+            }
+
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

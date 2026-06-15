@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { create } from "zustand";
 
 interface AuthState {
@@ -24,10 +25,16 @@ export const useAuthStore = create<AuthState>((set) => {
         localStorage.removeItem("user");
       }
       set({ currentUser: user });
+      toast.success("User logged in successfully", {
+        position: "bottom-right"
+      })
     },
     logout: () => {
       localStorage.removeItem("user");
       set({ currentUser: null });
+      toast.success("User logged out successfully", {
+        position: "bottom-right"
+      })
     },
   };
 });

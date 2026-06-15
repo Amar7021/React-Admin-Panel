@@ -166,6 +166,10 @@
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 /* Custom chart and scrollbar styles */
 ::-webkit-scrollbar {
   width: 6px;

@@ -24,7 +24,7 @@ interface ChartProps {
 
 const Chart = ({ aspect = 2 / 1, title }: ChartProps) => {
   return (
-    <Card className="flex-3 min-w-[320px]">
+    <Card className="flex-3 min-w-[260px]">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           {title}

@@ -50,13 +50,13 @@ const New = ({ title }: NewProps) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Hook Form setup based on dynamic type
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors, isSubmitting } 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
   } = useForm<any>({
     resolver: zodResolver(type === "users" ? userSchema : productSchema),
-    defaultValues: type === "users" 
+    defaultValues: type === "users"
       ? { username: "", displayName: "", email: "", password: "", phone: "", address: "", country: "", status: "active" }
       : { title: "", description: "", category: "", price: "", stock: "" }
   });
@@ -88,16 +88,14 @@ const New = ({ title }: NewProps) => {
       <div className="flex-1 flex flex-col min-w-0">
         <Navbar />
         <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {/* Header Title */}
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
             <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Left Box: Image Upload Preview Card */}
             <Card className="flex-1 lg:max-w-xs flex flex-col items-center justify-center p-6 text-center border-dashed">
-              <CardContent className="space-y-4 pt-6">
+              <CardContent className="space-y-4 pt-6 flex items-center flex-col">
                 <div className="relative group">
                   <img
                     src={
@@ -105,12 +103,12 @@ const New = ({ title }: NewProps) => {
                         ? URL.createObjectURL(file)
                         : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
                     }
-                    alt="preview"
+                    // alt="preview"
                     className="h-32 w-32 rounded-full object-cover border border-border bg-muted ring-4 ring-muted/50"
                   />
-                  <label 
+                  <label
                     htmlFor="fileInput"
-                    className="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-semibold cursor-pointer transition-opacity"
+                    className="h-32 w-32 absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-semibold cursor-pointer transition-opacity"
                   >
                     Change Image
                   </label>
@@ -128,22 +126,22 @@ const New = ({ title }: NewProps) => {
                     const files = e.target.files;
                     if (files && files[0]) setFile(files[0]);
                   }}
+                  accept=".jpg, .jpeg, .png, .webp"
                   className="hidden"
                 />
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
+                {/* <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => document.getElementById("fileInput")?.click()}
                   className="w-full gap-1.5 cursor-pointer"
                 >
                   <Upload className="h-4 w-4" />
                   Upload
-                </Button>
+                </Button> */}
               </CardContent>
             </Card>
 
-            {/* Right Box: Dynamic fields Form card */}
             <Card className="flex-2">
               <CardContent className="p-6">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -191,7 +189,7 @@ const New = ({ title }: NewProps) => {
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-xs font-bold text-muted-foreground uppercase">Status</label>
-                          <select 
+                          <select
                             className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring text-foreground"
                             {...register("status")}
                           >
@@ -232,16 +230,16 @@ const New = ({ title }: NewProps) => {
                   </div>
 
                   <div className="flex justify-end gap-3 pt-4 border-t border-border">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
+                    <Button
+                      type="button"
+                      variant="outline"
                       onClick={() => navigate(-1)}
                       className="cursor-pointer"
                     >
                       Cancel
                     </Button>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={isSubmitting}
                       className="font-bold cursor-pointer"
                     >

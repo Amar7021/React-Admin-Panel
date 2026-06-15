@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const Featured = () => {
   return (
-    <Card className="flex-2 min-w-[320px]">
+    <Card className="flex-2 min-w-[260px]">
       <CardContent className="p-6 flex flex-col justify-between h-full space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">

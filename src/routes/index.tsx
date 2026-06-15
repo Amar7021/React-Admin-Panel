@@ -22,75 +22,72 @@ export const router = createBrowserRouter([
     errorElement: <ErrorBoundary />
   },
   {
-    Component: ProtectedRoute,
+    path: "/",
+    element: (
+      <SuspenseLayout>
+        <Home />
+      </SuspenseLayout>
+    ),
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/users",
     errorElement: <ErrorBoundary />,
     children: [
       {
-        path: "/",
+        index: true,
         element: (
           <SuspenseLayout>
-            <Home />
+            <List />
           </SuspenseLayout>
         ),
       },
       {
-        path: "/users",
-        children: [
-          {
-            index: true,
-            element: (
-              <SuspenseLayout>
-                <List />
-              </SuspenseLayout>
-            ),
-          },
-          {
-            path: ":userId",
-            element: (
-              <SuspenseLayout>
-                <Single />
-              </SuspenseLayout>
-            ),
-          },
-          {
-            path: "new",
-            element: (
-              <SuspenseLayout>
-                <New title="Create New User" />
-              </SuspenseLayout>
-            ),
-          }
-        ]
+        path: ":userId",
+        element: (
+          <SuspenseLayout>
+            <Single />
+          </SuspenseLayout>
+        ),
       },
       {
-        path: "/products",
-        children: [
-          {
-            index: true,
-            element: (
-              <SuspenseLayout>
-                <List />
-              </SuspenseLayout>
-            ),
-          },
-          {
-            path: ":productId",
-            element: (
-              <SuspenseLayout>
-                <Single />
-              </SuspenseLayout>
-            ),
-          },
-          {
-            path: "new",
-            element: (
-              <SuspenseLayout>
-                <New title="Create New Product" />
-              </SuspenseLayout>
-            ),
-          }
-        ]
+        path: "new",
+        element: (
+          <SuspenseLayout>
+            <New title="Create New User" />
+          </SuspenseLayout>
+        ),
+      }
+    ]
+  },
+  {
+    path: "/products",
+    errorElement: <ErrorBoundary />,
+    children: [
+      {
+        index: true,
+        element: (
+          <SuspenseLayout>
+            <List />
+          </SuspenseLayout>
+        ),
       },
+      {
+        path: ":productId",
+        element: (
+          <SuspenseLayout>
+            <Single />
+          </SuspenseLayout>
+        ),
+      },
+      {
+        path: "new",
+        element: (
+          <SuspenseLayout>
+            <New title="Create New Product" />
+          </SuspenseLayout>
+        ),
+      }
     ]
   },
   {
