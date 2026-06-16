@@ -3,6 +3,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SuspenseLayout from "./components/SuspenseLayout";
+import NoAuthLayout from "@/components/layout/NoAuthLayout";
+import RootLayout from "@/components/layout/RootLayout";
 
 // Lazy load pages for code splitting
 const Login = React.lazy(() => import("@/pages/login/Login"));
@@ -13,81 +15,87 @@ const New = React.lazy(() => import("@/pages/new/New"));
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
-    element: (
-      <SuspenseLayout>
-        <Login />
-      </SuspenseLayout>
-    ),
-    errorElement: <ErrorBoundary />
+    Component: NoAuthLayout,
+    errorElement: <ErrorBoundary />,
+    children: [{
+      path: "/login",
+      element: (
+        <SuspenseLayout>
+          <Login />
+        </SuspenseLayout>
+      )
+    }]
   },
   {
-    path: "/",
-    element: (
-      <SuspenseLayout>
-        <Home />
-      </SuspenseLayout>
-    ),
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/users",
+    Component: RootLayout,
     errorElement: <ErrorBoundary />,
     children: [
       {
-        index: true,
+        path: "/",
         element: (
           <SuspenseLayout>
-            <List />
+            <Home />
           </SuspenseLayout>
-        ),
+        )
       },
       {
-        path: ":userId",
-        element: (
-          <SuspenseLayout>
-            <Single />
-          </SuspenseLayout>
-        ),
+        path: "/users",
+        children: [
+          {
+            index: true,
+            element: (
+              <SuspenseLayout>
+                <List />
+              </SuspenseLayout>
+            ),
+          },
+          {
+            path: ":userId",
+            element: (
+              <SuspenseLayout>
+                <Single />
+              </SuspenseLayout>
+            ),
+          },
+          {
+            path: "new",
+            element: (
+              <SuspenseLayout>
+                <New title="Create New User" />
+              </SuspenseLayout>
+            ),
+          }
+        ]
       },
       {
-        path: "new",
-        element: (
-          <SuspenseLayout>
-            <New title="Create New User" />
-          </SuspenseLayout>
-        ),
-      }
-    ]
-  },
-  {
-    path: "/products",
-    errorElement: <ErrorBoundary />,
-    children: [
-      {
-        index: true,
-        element: (
-          <SuspenseLayout>
-            <List />
-          </SuspenseLayout>
-        ),
+        path: "/products",
+        children: [
+          {
+            index: true,
+            element: (
+              <SuspenseLayout>
+                <List />
+              </SuspenseLayout>
+            ),
+          },
+          {
+            path: ":productId",
+            element: (
+              <SuspenseLayout>
+                <Single />
+              </SuspenseLayout>
+            ),
+          },
+          {
+            path: "new",
+            element: (
+              <SuspenseLayout>
+                <New title="Create New Product" />
+              </SuspenseLayout>
+            ),
+          }
+        ]
       },
-      {
-        path: ":productId",
-        element: (
-          <SuspenseLayout>
-            <Single />
-          </SuspenseLayout>
-        ),
-      },
-      {
-        path: "new",
-        element: (
-          <SuspenseLayout>
-            <New title="Create New Product" />
-          </SuspenseLayout>
-        ),
-      }
     ]
   },
   {

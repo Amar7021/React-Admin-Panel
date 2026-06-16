@@ -9,7 +9,8 @@ import {
   MessageSquare,
   User as UserIcon,
   Settings,
-  LogOut
+  LogOut,
+  LogIn
 } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
@@ -27,10 +28,20 @@ import { cn } from "@/utils/cn";
 import { toast } from "sonner";
 import { Menu } from "lucide-react";
 import { useSidebarStore } from "@/store/sidebarStore";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 const Navbar = () => {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [fullscreen, setFullscreen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const darkMode = useThemeStore((state) => state.darkMode);
   const toggleDarkMode = useThemeStore((state) => state.toggleDarkMode);
@@ -39,8 +50,6 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const searchRef = useRef<HTMLInputElement>(null);
-
-  console.log({ currentUser })
 
   useEffect(() => {
     const unsub = dbService.listenNotifications((data) => {
@@ -256,10 +265,18 @@ const Navbar = () => {
               <Settings className="h-4 w-4 mr-2" />
               <span>Settings</span>
             </DropdownMenuItem>
+            {!currentUser && <DropdownMenuItem onClick={() => navigate('/login')}>
+              <LogIn className="h-4 w-4 mr-2" />
+              <span>Login</span>
+            </DropdownMenuItem>}
             {
-              currentUser && <><DropdownMenuSeparator />
+              currentUser && <>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={handleLogout}
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    setLogoutDialogOpen(true);
+                  }}
                   className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
@@ -270,6 +287,27 @@ const Navbar = () => {
 
           </DropdownMenuContent>
         </DropdownMenu>
+        <AlertDialog
+          open={logoutDialogOpen}
+          onOpenChange={setLogoutDialogOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to logout?
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleLogout}
+              >
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </header>
   );

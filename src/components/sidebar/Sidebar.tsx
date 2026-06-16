@@ -1,23 +1,11 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Users,
-  Package,
-  CreditCard,
-  Truck,
-  TrendingUp,
-  Bell,
-  Activity,
-  FileText,
-  Settings,
-  User as UserIcon,
   LogOut,
   X,
   Sun,
   Moon,
 } from "lucide-react";
-
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useAuthStore } from "@/store/authStore";
 import { dbService } from "@/lib/db";
@@ -29,6 +17,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { menuItems } from "./helper";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -38,9 +38,6 @@ const Sidebar = () => {
   const darkMode = useThemeStore((state) => state.darkMode);
   const setDarkMode = useThemeStore((state) => state.setDarkMode);
   const setLightMode = useThemeStore((state) => state.setLightMode);
-
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  console.log({ sidebarRef })
 
   const currentUser = useAuthStore((state) => state.currentUser);
   const logout = useAuthStore((state) => state.logout);
@@ -58,89 +55,6 @@ const Sidebar = () => {
       window.removeEventListener("keydown", handleEscape);
     };
   }, [close]);
-
-  const menuItems = [
-    {
-      title: "MAIN",
-      items: [
-        {
-          name: "Dashboard",
-          icon: LayoutDashboard,
-          path: "/",
-        },
-      ],
-    },
-    {
-      title: "LISTS",
-      items: [
-        {
-          name: "Users",
-          icon: Users,
-          path: "/users",
-        },
-        {
-          name: "Products",
-          icon: Package,
-          path: "/products",
-        },
-        {
-          name: "Orders",
-          icon: CreditCard,
-          path: "/orders",
-        },
-        {
-          name: "Delivery",
-          icon: Truck,
-          path: "/delivery",
-        },
-      ],
-    },
-    {
-      title: "USEFUL",
-      items: [
-        {
-          name: "Stats",
-          icon: TrendingUp,
-          path: "/stats",
-        },
-        {
-          name: "Notifications",
-          icon: Bell,
-          path: "/notifications",
-        },
-      ],
-    },
-    {
-      title: "SERVICE",
-      items: [
-        {
-          name: "System Health",
-          icon: Activity,
-          path: "/health",
-        },
-        {
-          name: "Logs",
-          icon: FileText,
-          path: "/logs",
-        },
-        {
-          name: "Settings",
-          icon: Settings,
-          path: "/settings",
-        },
-      ],
-    },
-    {
-      title: "USER",
-      items: [
-        {
-          name: "Profile",
-          icon: UserIcon,
-          path: "/profile",
-        },
-      ],
-    },
-  ];
 
   const handleLinkClick = (
     e: React.MouseEvent,
@@ -237,7 +151,7 @@ const Sidebar = () => {
                       </NavLink>
                     </li>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent side={"right"}>
                     <p>{item.name}</p>
                   </TooltipContent>
                 </Tooltip>
@@ -315,13 +229,20 @@ const Sidebar = () => {
           ))}
 
           {currentUser && (
-            <button
-              onClick={handleLogout}
-              className="w-full mt-4 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
-            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full mt-4 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10"><LogOut className="h-4 w-4" /><span>Logout</span></Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleLogout}>Confirm</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
         <div className="p-4 border-t border-border flex items-center gap-3 bg-muted/30">

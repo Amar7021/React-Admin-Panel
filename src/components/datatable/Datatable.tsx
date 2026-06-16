@@ -22,6 +22,17 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown";
 import { cn } from "@/utils/cn";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const Datatable = () => {
   const location = useLocation();
@@ -47,16 +58,14 @@ const Datatable = () => {
   }, [type]);
 
   const handleDelete = async (id: string) => {
-    if (window.confirm(`Are you sure you want to delete this ${type === "users" ? "user" : "product"}?`)) {
-      try {
-        if (type === "users") {
-          await dbService.deleteUser(id);
-        } else {
-          await dbService.deleteProduct(id);
-        }
-      } catch (err) {
-        console.error("Delete failed", err);
+    try {
+      if (type === "users") {
+        await dbService.deleteUser(id);
+      } else {
+        await dbService.deleteProduct(id);
       }
+    } catch (err) {
+      console.error("Delete failed", err);
     }
   };
 
@@ -67,7 +76,7 @@ const Datatable = () => {
         {
           accessorKey: "id",
           header: "ID",
-          cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.original.id}</span>
+          cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.index + 1}</span>
         },
         {
           accessorKey: "displayName",
@@ -83,7 +92,7 @@ const Datatable = () => {
           cell: ({ row }) => (
             <div className="flex items-center gap-3">
               <img
-                src={row.original.img || "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
+                src={row.original.img || "/assets/no-img.jpg"}
                 alt="avatar"
                 className="h-8 w-8 rounded-full object-cover border border-border"
               />
@@ -130,7 +139,24 @@ const Datatable = () => {
                   <Eye className="h-4 w-4" />
                 </Button>
               </Link>
-              <Button
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 w-8 p-0" title="Delete"><Trash2 className="h-4 w-4" /></Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete this record.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(row.original.id)}>Confirm</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              {/* <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleDelete(row.original.id)}
@@ -138,7 +164,7 @@ const Datatable = () => {
                 title="Delete"
               >
                 <Trash2 className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </div>
           )
         }
@@ -165,7 +191,7 @@ const Datatable = () => {
           cell: ({ row }) => (
             <div className="flex items-center gap-3">
               <img
-                src={row.original.img || "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
+                src={row.original.img || "/assets/no-image.jpg"}
                 alt="product"
                 className="h-8 w-8 rounded-lg object-cover border border-border bg-muted"
               />

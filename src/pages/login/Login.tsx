@@ -106,101 +106,99 @@ const Login = () => {
 
   return (
     <>
-      <div className="min-h-screen w-full flex items-center justify-center bg-radial from-muted/50 to-background p-4 sm:p-6">
-        <Card className="w-full max-w-md border border-border shadow-lg bg-card/65 backdrop-blur-md">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Welcome Back
-            </CardTitle>
-            <CardDescription className="text-xs text-muted-foreground">
-              Enter your credentials to access the Admin Dashboard
-            </CardDescription>
-          </CardHeader>
+      <Card className="w-full max-w-md border border-border shadow-lg bg-card/65 backdrop-blur-md">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-bold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            Welcome Back
+          </CardTitle>
+          <CardDescription className="text-xs text-muted-foreground">
+            Enter your credentials to access the Admin Dashboard
+          </CardDescription>
+        </CardHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <CardContent className="space-y-4">
-              {errorMsg && (
-                <div className="flex items-center gap-2 p-3 text-xs bg-destructive/10 text-destructive border border-destructive/20 rounded-lg select-none">
-                  <AlertCircle className="h-4 w-4 shrink-0" />
-                  <p className="font-semibold">{errorMsg}</p>
-                </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            {errorMsg && (
+              <div className="flex items-center gap-2 p-3 text-xs bg-destructive/10 text-destructive border border-destructive/20 rounded-lg select-none">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <p className="font-semibold">{errorMsg}</p>
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground">Email</label>
+              <div className="relative flex items-center">
+                <Mail className="absolute left-3 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="email"
+                  placeholder="admin@admin.com"
+                  className={cn(
+                    "pl-9",
+                    errors.email && "border-destructive focus-visible:ring-destructive"
+                  )}
+                  {...register("email")}
+                />
+              </div>
+              {errors.email && (
+                <p className="text-[11px] text-destructive font-semibold flex items-center gap-1 select-none">
+                  {errors.email.message}
+                </p>
               )}
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Email</label>
-                <div className="relative flex items-center">
-                  <Mail className="absolute left-3 h-4 w-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    type="email"
-                    placeholder="admin@admin.com"
-                    className={cn(
-                      "pl-9",
-                      errors.email && "border-destructive focus-visible:ring-destructive"
-                    )}
-                    {...register("email")}
-                  />
-                </div>
-                {errors.email && (
-                  <p className="text-[11px] text-destructive font-semibold flex items-center gap-1 select-none">
-                    {errors.email.message}
-                  </p>
-                )}
+            </div>
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-semibold text-muted-foreground">Password</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    reset({
+                      email: emailValue,
+                    });
+                    setIsResetOpen(true)
+                  }}
+                  className="text-xs text-primary hover:underline cursor-pointer"
+                >
+                  Forgot?
+                </button>
               </div>
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs font-semibold text-muted-foreground">Password</label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      reset({
-                        email: emailValue,
-                      });
-                      setIsResetOpen(true)
-                    }}
-                    className="text-xs text-primary hover:underline cursor-pointer"
-                  >
-                    Forgot?
-                  </button>
-                </div>
-                <div className="relative flex items-center">
-                  <Lock className="absolute left-3 h-4 w-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    className={cn(
-                      "pl-9",
-                      errors.password && "border-destructive focus-visible:ring-destructive"
-                    )}
-                    {...register("password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute right-3 text-muted-foreground hover:text-foreground cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-[11px] text-destructive font-semibold flex items-center gap-1 select-none">
-                    {errors.password.message}
-                  </p>
-                )}
+              <div className="relative flex items-center">
+                <Lock className="absolute left-3 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className={cn(
+                    "pl-9",
+                    errors.password && "border-destructive focus-visible:ring-destructive"
+                  )}
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(prev => !prev)}
+                  className="absolute right-3 text-muted-foreground hover:text-foreground cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
-            </CardContent>
+              {errors.password && (
+                <p className="text-[11px] text-destructive font-semibold flex items-center gap-1 select-none">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          </CardContent>
 
-            <CardFooter className="flex flex-col space-y-4">
-              <Button
-                type="submit"
-                className="w-full font-bold"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Logging in..." : "Login"}
-              </Button>
-            </CardFooter>
-          </form>
-        </Card>
-      </div>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button
+              type="submit"
+              className="w-full font-bold"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Logging in..." : "Login"}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
       <Dialog
         open={isResetOpen}
         onOpenChange={setIsResetOpen}
