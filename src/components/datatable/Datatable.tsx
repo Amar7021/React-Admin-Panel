@@ -156,15 +156,6 @@ const Datatable = () => {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              {/* <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleDelete(row.original.id)}
-                className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive text-muted-foreground"
-                title="Delete"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button> */}
             </div>
           )
         }
@@ -175,7 +166,7 @@ const Datatable = () => {
         {
           accessorKey: "id",
           header: "ID",
-          cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.original.id}</span>
+          cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.index + 1}</span>
         },
         {
           accessorKey: "title",
@@ -191,7 +182,7 @@ const Datatable = () => {
           cell: ({ row }) => (
             <div className="flex items-center gap-3">
               <img
-                src={row.original.img || "/assets/no-image.jpg"}
+                src={row.original.img || "/assets/no-img.jpg"}
                 alt="product"
                 className="h-8 w-8 rounded-lg object-cover border border-border bg-muted"
               />
@@ -233,15 +224,23 @@ const Datatable = () => {
                   <Eye className="h-4 w-4" />
                 </Button>
               </Link>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleDelete(row.original.id)}
-                className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive text-muted-foreground"
-                title="Delete"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 w-8 p-0" title="Delete"><Trash2 className="h-4 w-4" /></Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete this record.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(row.original.id)}>Confirm</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           )
         }
