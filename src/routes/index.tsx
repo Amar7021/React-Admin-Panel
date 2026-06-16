@@ -1,6 +1,5 @@
 import * as React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SuspenseLayout from "./components/SuspenseLayout";
 import NoAuthLayout from "@/components/layout/NoAuthLayout";

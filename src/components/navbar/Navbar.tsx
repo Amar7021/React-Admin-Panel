@@ -41,6 +41,7 @@ import {
 const Navbar = () => {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [fullscreen, setFullscreen] = useState(false);
+  console.log({ fullscreen })
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const darkMode = useThemeStore((state) => state.darkMode);

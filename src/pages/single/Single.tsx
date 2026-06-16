@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom";
 import Chart from "@/components/chart/Chart";
 import List from "@/components/table/Table";
 import { dbService, User, Product } from "@/lib/db";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Globe, Edit2, Package, DollarSign, Boxes } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, Package, DollarSign, Boxes } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Single = () => {

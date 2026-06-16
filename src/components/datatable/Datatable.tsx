@@ -11,7 +11,7 @@ import {
   ColumnDef
 } from "@tanstack/react-table";
 import { ChevronDown, ArrowUpDown, Plus, Eye, Trash2, Search, SlidersHorizontal } from "lucide-react";
-import { dbService, User, Product } from "@/lib/db";
+import { dbService } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
