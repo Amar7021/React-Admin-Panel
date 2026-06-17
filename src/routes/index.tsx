@@ -10,7 +10,8 @@ const Login = React.lazy(() => import("@/pages/login/Login"));
 const Home = React.lazy(() => import("@/pages/home/Home"));
 const List = React.lazy(() => import("@/pages/list/List"));
 const Single = React.lazy(() => import("@/pages/single/Single"));
-const New = React.lazy(() => import("@/pages/new/New"));
+const NewUser = React.lazy(() => import("@/pages/new/NewUser"));
+const NewProduct = React.lazy(() => import("@/pages/new/NewProduct"));
 
 export const router = createBrowserRouter([
   {
@@ -60,7 +61,7 @@ export const router = createBrowserRouter([
             path: "new",
             element: (
               <SuspenseLayout>
-                <New title="Create New User" />
+                <NewUser title="Create New User" />
               </SuspenseLayout>
             ),
           }
@@ -89,7 +90,7 @@ export const router = createBrowserRouter([
             path: "new",
             element: (
               <SuspenseLayout>
-                <New title="Create New Product" />
+                <NewProduct title="Create New Product" />
               </SuspenseLayout>
             ),
           }
