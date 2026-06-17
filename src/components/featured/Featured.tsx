@@ -23,9 +23,9 @@ const Featured = () => {
               text={"70%"}
               strokeWidth={8}
               styles={buildStyles({
-                pathColor: "hsl(var(--primary))",
-                textColor: "hsl(var(--foreground))",
-                trailColor: "hsl(var(--muted))",
+                pathColor: "var(--primary)",
+                textColor: "var(--foreground)",
+                trailColor: "var(--muted)",
                 textSize: "18px"
               })}
             />

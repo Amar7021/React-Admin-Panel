@@ -10,6 +10,7 @@ import {
 import { dbService } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/utils/cn";
+import { useNavigate } from "react-router-dom";
 
 interface WidgetProps {
   type: "user" | "product" | "order" | "earning";
@@ -19,6 +20,8 @@ const Widget = ({ type }: WidgetProps) => {
   const [amount, setAmount] = useState<number | null>(null);
   const [diff, setDiff] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let active = true;
@@ -81,7 +84,7 @@ const Widget = ({ type }: WidgetProps) => {
         title: "ORDERS",
         isMoney: false,
         link: "View all orders",
-        path: "/orders",
+        path: "",
         icon: ShoppingCart,
         colorClass: "text-amber-500",
         bgClass: "bg-amber-500/10"
@@ -92,7 +95,7 @@ const Widget = ({ type }: WidgetProps) => {
         title: "EARNINGS",
         isMoney: true,
         link: "View net earnings",
-        path: "/stats",
+        path: "",
         icon: DollarSign,
         colorClass: "text-green-500",
         bgClass: "bg-green-500/10"
@@ -120,7 +123,7 @@ const Widget = ({ type }: WidgetProps) => {
               </>
             )}
           </span>
-          <span className="text-xs text-primary underline underline-offset-4 cursor-pointer hover:text-primary/80 transition-colors">
+          <span className="text-xs text-primary underline underline-offset-4 cursor-pointer hover:text-primary/80 transition-colors" onClick={() => navigate(config.path)}>
             {config.link}
           </span>
         </div>
