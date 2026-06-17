@@ -7,15 +7,13 @@ import {
   query,
   where,
   getDocs,
-  serverTimestamp,
-  Firestore
+  serverTimestamp
 } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut as firebaseSignOut,
-  createUserWithEmailAndPassword,
-  UserCredential
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, auth, storage, isFirebaseActive } from "./firebase";

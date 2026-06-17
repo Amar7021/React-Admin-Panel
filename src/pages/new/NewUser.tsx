@@ -31,7 +31,7 @@ interface NewProps {
 type UserFormData = z.infer<typeof userSchema>;
 
 const NewUser = ({ title }: NewProps) => {
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ const NewUser = ({ title }: NewProps) => {
   const onSubmit = async (values: any) => {
     try {
       setErrorMsg(null);
-      await dbService.addUser(values, file || undefined);
+      await dbService.addUser(values);
       navigate(-1);
     } catch (err: any) {
       console.error("Creation failed", err);

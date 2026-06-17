@@ -32,7 +32,7 @@ type ProductFormData = z.infer<typeof productSchema>;
 const NewProduct = ({ title }: NewProps) => {
     const navigate = useNavigate();
 
-    const [file, setFile] = useState<File | null>(null);
+    // const [file, setFile] = useState<File | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
     const {
@@ -55,7 +55,7 @@ const NewProduct = ({ title }: NewProps) => {
                 category: values.category,
                 price: Number(values.price),
                 stock: Number(values.stock),
-            }, file || undefined);
+            });
             navigate(-1);
         } catch (err: any) {
             console.error("Creation failed", err);
